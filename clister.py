@@ -630,20 +630,20 @@ def craiglister(jsdata):
 
 
 
-    options = webdriver.ChromeOptions()
-    options.add_argument("--headless")
-    options.add_argument("--disable-gpu")
+    # options = webdriver.ChromeOptions()
+    # options.add_argument("--headless")
+    # options.add_argument("--disable-gpu")
 
-    capabilities = options.to_capabilities()
+    # capabilities = options.to_capabilities()
 
-    listing.driver = webdriver.Remote(command_executor='http://127.0.0.1:4444/wd/hub', desired_capabilities=capabilities)
-    listing.driver.file_detector = LocalFileDetector()
-    listing.driver.get("https://craigslist.org?lang=en")
+    # listing.driver = webdriver.Remote(command_executor='http://127.0.0.1:4444/wd/hub', desired_capabilities=capabilities)
+    # listing.driver.file_detector = LocalFileDetector()
+    # listing.driver.get("https://craigslist.org?lang=en")
     # driver.quit() 
 
 
-    # listing.driver = webdriver.Chrome(chromedriver)
-    # listing.driver.get("https://craigslist.org?lang=en")
+    listing.driver = webdriver.Chrome()
+    listing.driver.get("https://craigslist.org?lang=en")
 
     postListing(listing)
     # acceptEmailTerms(listing)
