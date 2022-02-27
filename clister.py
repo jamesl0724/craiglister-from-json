@@ -561,10 +561,11 @@ def craiglister(jsdata):
         application_path = os.path.dirname(sys.executable)
     elif __file__:
         application_path = os.path.dirname(__file__)
+        print("path: "+application_path)
 
     # os.path.basename(__file__)
     # print(file_path, file_dir)
-    print("path: "+application_path)
+    
     listingsFolderDirectory = os.path.join(application_path, "listings")
     listedFolderDirectory = os.path.join(listingsFolderDirectory,"listed")
 
