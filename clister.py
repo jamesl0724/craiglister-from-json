@@ -633,7 +633,7 @@ def craiglister(jsdata):
 
     capabilities = options.to_capabilities()
 
-    listing.driver = webdriver.Remote(command_executor='http://18.197.200.123:4444/wd/hub', desired_capabilities=capabilities)
+    listing.driver = webdriver.Remote(command_executor='http://127.0.0.1:4444/wd/hub', desired_capabilities=capabilities)
     listing.driver.file_detector = LocalFileDetector()
     listing.driver.get("https://craigslist.org?lang=en")
     # driver.quit() 
