@@ -647,7 +647,7 @@ def craiglister(jsdata):
     chrome_options.add_argument('--headless')
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
-    listing.driver = webdriver.Chrome('/home/ubuntu/chromedriver',chrome_options=chrome_options)
+    listing.driver = webdriver.Chrome('chromedriver',chrome_options=chrome_options)
     listing.driver.get("https://craigslist.org?lang=en")
 
     postListing(listing)
