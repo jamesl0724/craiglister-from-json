@@ -564,7 +564,7 @@ def craiglister(jsdata):
 
     # os.path.basename(__file__)
     # print(file_path, file_dir)
-    print(application_path)
+    print("path: "+application_path)
     listingsFolderDirectory = os.path.join(application_path, "listings")
     listedFolderDirectory = os.path.join(listingsFolderDirectory,"listed")
 
