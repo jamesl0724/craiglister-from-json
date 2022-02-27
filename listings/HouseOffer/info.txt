@@ -1,0 +1,12 @@
+<Location>ame<Location>
+<Title>New House<Title>
+<Type>housing offered<Type>
+<Category>real estate - by broker<Category>
+<Email>clpostingtest@outlook.com<Email>
+<Street>212 My Street<Street>
+<City>Ames<City>
+<CrossStreet><CrossStreet>
+<State>IA<State>
+<Postal>50010<Postal>
+<Body>This listing is for New Amazing house<Body>
+<Price>249<Price>
