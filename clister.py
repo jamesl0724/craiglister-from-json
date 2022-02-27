@@ -560,7 +560,7 @@ def craiglister(jsdata):
     if getattr(sys, 'frozen', False):
         application_path = os.path.dirname(sys.executable)
     elif __file__:
-        application_path = os.path.dirname(__file__)
+        application_path = os.path.dirname(os.path.realpath(__file__))
         print("path: "+application_path)
 
     # os.path.basename(__file__)
