@@ -1,0 +1,7 @@
+{
+	"fetch_url": "https://dixhomes.com/mlsdata/auto_posting_json.php",
+	"update_url": "https://dixhomes.com/mlsdata/update.php?recno=",
+	"email": "311marketing311@gmail.com",
+	"password": "Enjoi454",
+	"interval": 60
+}

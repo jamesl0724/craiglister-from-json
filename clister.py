@@ -14,6 +14,7 @@ import os
 import shutil
 import sys
 import imaplib
+import json
 import email
 from email.header import decode_header
 import webbrowser
@@ -22,9 +23,13 @@ from inspect import getsourcefile
 from os.path import abspath
 from datetime import date
 from PIL import Image
-from gmail import GMail
+# from gmail import Gmail
 from io import StringIO
 from html.parser import HTMLParser
+import warnings
+
+warnings.filterwarnings('ignore')
+# sys.stdout = open(os.devnull, 'w')
 
 class gettingInfoParse(object):
     def __init__(self):
@@ -65,22 +70,48 @@ def clickAbideByGuidelines(listing):
         pass
 
 def clickClassImageUploader(listing):
-    
 	
     listing.driver.find_element_by_id("classic").click()
 
 def clickListingType(listing):
-    
-    listing.driver.find_element_by_xpath("//span[text()[contains(.,'"+listing.type+"')]]").click()
+    try:
+        listing.driver.find_element_by_xpath("//span[text()[contains(.,'"+listing.type+"')]]").click()
+    except:
+        pass
 # //span[text()[contains(.,'job offered')]]
 def clickListingCategory(listing):
-    listing.driver.find_element_by_xpath("//span[text()[contains(.,'"+listing.category+"')]]").click()
+    try:
+        listing.driver.find_element_by_xpath("//span[text()[contains(.,'"+listing.type+"')]]").click()
+    except:
+        pass
+    try:
+        listing.driver.find_element_by_xpath("//span[text()[contains(.,'"+listing.type+"')]]").click()
+    except:
+        pass
+    try:
+        listing.driver.find_element_by_xpath("//span[text()[contains(.,'"+listing.category+"')]]").click()
+    except:
+        pass
+    try:
+        listing.driver.find_element_by_xpath("//span[text()[contains(.,'"+listing.type+"')]]").click()
+    except:
+        pass
+    try:
+        listing.driver.find_element_by_xpath("//span[text()[contains(.,'"+listing.category+"')]]").click()
+    except:
+        pass
+    try:
+        listing.driver.find_element_by_css_selector("button.pickbutton").click()
+    except:
+        pass
+    
 
 def uploadImagePath(listing,image):
 	# listing.driver.find_element_by_xpath(".//*[@id='uploader']/form/input[3]").send_keys(Keys.CONTROL + "a")
 	listing.driver.find_element_by_xpath(".//*[@id='uploader']/form/input[3]").send_keys(image)
 
-def fillOutListing(listing):
+def fillOutListing(listing, flag):
+    time.sleep(5)
     listing.driver.find_element_by_css_selector("[name='FromEMail']").send_keys(Keys.CONTROL + "a")
     listing.driver.find_element_by_css_selector("[name='FromEMail']").send_keys(listing.email)
     # listing.driver.find_element_by_css_selector("[name='ConfirmEMail']").send_keys(listing.email)
@@ -91,6 +122,7 @@ def fillOutListing(listing):
     listing.driver.find_element_by_css_selector("[name='geographic_area']").send_keys(listing.city)
     listing.driver.find_element_by_css_selector("[name='postal']").send_keys(Keys.CONTROL + "a")
     listing.driver.find_element_by_css_selector("[name='postal']").send_keys(listing.postal)
+    print("#######postal code#######"+listing.postal)
     body = strip_tags(listing.body)
     listing.driver.find_element_by_css_selector("[name='PostingBody']").send_keys(Keys.CONTROL + "a")
     listing.driver.find_element_by_css_selector("[name='PostingBody']").send_keys(body)
@@ -114,23 +146,32 @@ def fillOutListing(listing):
         listing.driver.find_element_by_css_selector("li[id='ui-id-32']").click()
         listing.driver.find_element_by_css_selector("label.bedrooms span.ui-selectmenu-text").click()
         time.sleep(1)
-        numbed = int(listing.bedrooms)+36
-        listing.driver.find_element_by_css_selector("li[id='ui-id-"+str(numbed)+"']").click()
-        numbath = int(listing.bathrooms)*2+46
-        listing.driver.find_element_by_css_selector("label.bathrooms span.ui-selectmenu-text").click()
-        time.sleep(1)
-        listing.driver.find_element_by_css_selector("li[id='ui-id-"+str(numbath)+"']").click()
+        if(listing.bedrooms != None):
+            numbed = int(listing.bedrooms)+36
+            listing.driver.find_element_by_css_selector("li[id='ui-id-"+str(numbed)+"']").click()
+        else:
+            listing.driver.find_element_by_css_selector("li[id='ui-id-"+str(36)+"']").click()
+        if(listing.bathrooms != None):
+            numbath = int(listing.bathrooms)*2+46
+            listing.driver.find_element_by_css_selector("label.bathrooms span.ui-selectmenu-text").click()
+            time.sleep(1)
+            listing.driver.find_element_by_css_selector("li[id='ui-id-"+str(numbath)+"']").click()
+        else:
+            time.sleep(1)
+            listing.driver.find_element_by_css_selector("li[id='ui-id-"+str(46)+"']").click()
+        
         if (listing.furnished == "1"):
             listing.driver.find_element_by_xpath("//span[text()[contains(.,'furnished')]]").click()
 
         today = date.today()
         tod = today.strftime("%a, %d %b %Y")
+        listing.driver.find_element_by_css_selector("input.movein_date").send_keys(Keys.CONTROL + "a")
         listing.driver.find_element_by_css_selector("input.movein_date").send_keys(tod)
-
-        listing.driver.find_element_by_xpath("//span[text()[contains(.,'no replies to this email')]]").click()
-        listing.driver.find_element_by_xpath("//span[text()[contains(.,'show my phone number')]]").click()
-        listing.driver.find_element_by_xpath("//span[text()[contains(.,'text/sms OK')]]").click()
-        listing.driver.find_element_by_css_selector("[name='contact_phone']").send_keys(listing.telephone)
+        # if(flag != "recursive"):
+        #     listing.driver.find_element_by_xpath("//span[text()[contains(.,'no replies to this email')]]").click()
+        #     listing.driver.find_element_by_xpath("//span[text()[contains(.,'show my phone number')]]").click()
+        #     listing.driver.find_element_by_xpath("//span[text()[contains(.,'text/sms OK')]]").click()
+        #     listing.driver.find_element_by_css_selector("[name='contact_phone']").send_keys(listing.telephone)
     else:
         if (listing.housing_type == "apartment"):
             listing.driver.find_element_by_css_selector("li[id='ui-id-11']").click()#9,14
@@ -156,16 +197,14 @@ def fillOutListing(listing):
 
         today = date.today()
         tod = today.strftime("%a, %d %b %Y")
+        listing.driver.find_element_by_css_selector("input.movein_date").send_keys(Keys.CONTROL + "a")
         listing.driver.find_element_by_css_selector("input.movein_date").send_keys(tod)
-
-        listing.driver.find_element_by_xpath("//span[text()[contains(.,'no replies to this email')]]").click()
-        listing.driver.find_element_by_xpath("//span[text()[contains(.,'show my phone number')]]").click()
-        listing.driver.find_element_by_xpath("//span[text()[contains(.,'text/sms OK')]]").click()
-        listing.driver.find_element_by_css_selector("[name='contact_phone']").send_keys(listing.telephone)
+        # if(flag != "recursive"):
+        #     # listing.driver.find_element_by_xpath("//span[text()[contains(.,'no replies to this email')]]").click()
+        #     listing.driver.find_element_by_xpath("//span[text()[contains(.,'show my phone number')]]").click()
+        #     listing.driver.find_element_by_xpath("//span[text()[contains(.,'text/sms OK')]]").click()
+        #     listing.driver.find_element_by_css_selector("[name='contact_phone']").send_keys(listing.telephone)
     
-
-    
-    time.sleep(1)
     listing.driver.find_element_by_css_selector("div.submit_button button").click()
     time.sleep(1)
 def fillOutGeolocation(listing):
@@ -188,8 +227,10 @@ def fillOutGeolocation(listing):
         pass
     try:
         listing.driver.find_element_by_css_selector("ul.selection-list li").click()
+    except:
+        pass
+    try:
         listing.driver.find_element_by_css_selector("button.pickbutton").click()
-
         return "recursive"
     except:
         pass
@@ -213,15 +254,15 @@ def removeImgExifData(path):
 
 def uploadListingImages(listing):
     time.sleep(1)
-    print("uploading image..")
+    # print("uploading image..")
     clickClassImageUploader(listing)
     for image in listing.images:
         removeImgExifData(image)
-        print("image: "+image)
+        # print("image: "+image)
         uploadImagePath(listing,image)
-        time.sleep(3)
+        time.sleep(1)
     clickDoneOnImageUploading(listing)
-    time.sleep(3)
+    time.sleep(1)
 
 def clickAcceptTerms(listing):
     listing.driver.find_element_by_xpath("//*[@id='pagecontainer']/section/section[1]//button[contains(.,'ACCEPT the terms of use')]").click()
@@ -234,13 +275,14 @@ def postListing(listing):
     clickListingType(listing)
     clickListingCategory(listing)
     clickAbideByGuidelines(listing)
-    fillOutListing(listing)
+    fillOutListing(listing, "normal")
     res = fillOutGeolocation(listing)
     if(res == 'recursive'):
         # return
+        clickListingType(listing)
         clickListingCategory(listing)
         clickAbideByGuidelines(listing)
-        fillOutListing(listing)
+        fillOutListing(listing, "recursive")
         res = fillOutGeolocation(listing)
     uploadListingImages(listing)
     clickPublishListing(listing)
@@ -265,91 +307,72 @@ def acceptTermsAndConditions(listing,termsUrl):
 
 def acceptEmailTerms(listing):
     
-    # account credentials
-    username = "311marketing311@gmail.com"
-    password = "Tyler.1969"
+    # print('Enter the gmailid and password')
+    gmailId, passWord = listing.email, listing.password
+    # try:
+        
+    listing.driver.get(r'https://accounts.google.com/signin/v2/identifier?continue='+'https%3A%2F%2Fmail.google.com%2Fmail%2F&service=mail&sacu=1&rip=1'+'&flowName=GlifWebSignIn&flowEntry = ServiceLogin')
+    listing.driver.implicitly_wait(15)
 
-    # create an IMAP4 class with SSL 
-    imap = imaplib.IMAP4_SSL("outlook.office365.com")
-    # authenticate
-    imap.login(username, password)
-    status, messages = imap.select("INBOX")
-    # number of top emails to fetch
-    N = 1
-    # total number of emails
-    messages = int(messages[0])
-    for i in range(messages, messages-N, -1):
-        # fetch the email message by ID
-        res, msg = imap.fetch(str(i), "(RFC822)")
-        for response in msg:
-            if isinstance(response, tuple):
-                # parse a bytes email into a message object
-                msg = email.message_from_bytes(response[1])
-                # decode the email subject
-                subject, encoding = decode_header(msg["Subject"])[0]
-                # if isinstance(subject, bytes):
-                #     # if it's a bytes, decode to str
-                #     subject = subject.decode(encoding)
-                # # decode email sender
-                From, encoding = decode_header(msg.get("From"))[0]
-                # if isinstance(From, bytes):
-                #     From = From.decode(encoding)
-                # print("Subject:", subject)
-                # print("From:", From)
-                # if the email message is multipart
-                if msg.is_multipart():
-                    # iterate over email parts
-                    for part in msg.walk():
-                        # extract content type of email
-                        content_type = part.get_content_type()
-                        content_disposition = str(part.get("Content-Disposition"))
-                        try:
-                            # get the email body
-                            body = part.get_payload(decode=True).decode()
-                        except:
-                            pass
-                        if content_type == "text/plain" and "attachment" not in content_disposition:
-                            # print text/plain emails and skip attachments
-                            accepturl = body.split("log in and publish")[1].strip().split("\r\n")[0].strip()
-                        elif "attachment" in content_disposition:
-                            # download attachment
-                            filename = part.get_filename()
-                            # if filename:
-                            #     folder_name = clean(subject)
-                            #     if not os.path.isdir(folder_name):
-                            #         # make a folder for this email (named after the subject)
-                            #         os.mkdir(folder_name)
-                            #     filepath = os.path.join(folder_name, filename)
-                            #     # download attachment and save it
-                            #     open(filepath, "wb").write(part.get_payload(decode=True))
-                else:
-                    # extract content type of email
-                    content_type = msg.get_content_type()
-                    # get the email body
-                    body = msg.get_payload(decode=True).decode()
-                    if content_type == "text/plain":
-                        # print only text email parts
-                        accepturl = body.split("log in and publish")[1].strip().split("\r\n")[0].strip()
-                # if content_type == "text/html":
-                #     # if it's HTML, create a new HTML file and open it in browser
-                #     folder_name = clean(subject)
-                #     if not os.path.isdir(folder_name):
-                #         # make a folder for this email (named after the subject)
-                #         os.mkdir(folder_name)
-                #     filename = "index.html"
-                #     filepath = os.path.join(folder_name, filename)
-                #     # write the file
-                #     open(filepath, "w").write(body)
-                #     # open in the default browser
-                #     webbrowser.open(filepath)
-                # print("="*100)
-    # close the connection and logout
-    print("accept")
-    listing.driver.close()
-    print(accepturl)
-    listing.driver.get(accepturl)
-    imap.close()
-    imap.logout()
+    loginBox = listing.driver.find_element_by_xpath('//*[@id ="identifierId"]')
+    loginBox.send_keys(gmailId)
+
+    nextButton = listing.driver.find_elements_by_xpath('//*[@id ="identifierNext"]')
+    nextButton[0].click()
+
+    passWordBox = listing.driver.find_element_by_xpath(
+        '//*[@id ="password"]/div[1]/div / div[1]/input')
+    passWordBox.send_keys(passWord)
+
+    nextButton = listing.driver.find_elements_by_xpath('//*[@id ="passwordNext"]')
+    nextButton[0].click()
+
+    # print('Login Successful...!!')
+    # listing.driver.find_element_by_tag_name('body').send_keys(Keys.COMMAND + 'w') 
+
+
+    mail = imaplib.IMAP4_SSL('imap.gmail.com')
+    mail.login(gmailId, passWord)
+    mail.list()
+    # Out: list of "folders" aka labels in gmail.
+    mail.select("inbox") # connect to inbox.
+    
+    result, data = mail.search(None, "ALL")
+    
+    ids = data[0] # data is a list.
+    id_list = ids.split() # ids is a space separated string
+    latest_email_id = id_list[-1] # get the latest
+    
+    result, data = mail.fetch(latest_email_id, "(RFC822)") # fetch the email body (RFC822) for the given ID
+    
+    raw_email = data[0][1] # here's the body, which is raw text of the whole email
+    # including headers and alternate payloads
+    raw_email = str(raw_email)
+    acctermurl = raw_email.split("https://")[1].split(r'\r\n')[0]
+    listing.driver.get(r'https://'+ acctermurl)
+    time.sleep(10)
+    # except:
+    #     print('Login Failed')
+    # import re
+    # print(re.search("(?P<url>https?://[^\s]+)", raw_email).group("url"))
+    # gmail = Gmail()
+    # gmailUser = "311marketing311@gmail.com"
+    # gmailPass = "Enjoi454"
+    # gmail.login(gmailUser,gmailPass)
+
+    # today = date.today()
+    # year = today.year
+    # month = today.month
+    # day = today.day
+
+    # time.sleep(120)
+    # print ("Checking email")
+    # emails = gmail.inbox().mail(sender="robot@craigslist.org",unread=True,after=datetime.date(year, month, day-1))
+    # termsUrl = getFirstCraigslistEmailUrl(listing,emails)
+    # acceptTermsAndConditions(listing,termsUrl)
+
+    # gmail.logout()
+    # print ("Done Checking Email")
 
 
 # --------------------------- Craigslist Posting Actions ---------------
@@ -387,9 +410,9 @@ def hasItBeenXDaysSinceFolderListed(folder,x):
     return False
 
 def getOrderedListingImages(listingFolder):
-    print ('listingFolder',listingFolder)
+    # print ('listingFolder',listingFolder)
     listingImages = [f for f in os.listdir(listingFolder) if os.path.isfile(os.path.join(listingFolder,f)) and f[0] != '.'  and f != 'info.txt' ]
-    print ('listingImages',listingImages)
+    # print ('listingImages',listingImages)
     secondList = [os.path.abspath(os.path.join(listingFolder, x)) for x in listingImages if (x[1] != "_") or (x[0].isdigit() == False) and x[0] != '.']
     firstList = [os.path.abspath(os.path.join(listingFolder, x)) for x in listingImages if (x[1] == "_") and (x[0].isdigit()) and x[0] != '.']
 
@@ -464,7 +487,7 @@ def getstatedataforsale(jsdata):
     # print("bath: "+bath)
     # sqt = getting.driver.find_element(By.CSS_SELECTOR, "li.rui__sc-147u46e-0 span span").get_attribute('innerHTML')
     # print("sqft: "+sqt)
-    print ("Extracting Images....")
+    # print ("Extracting Images....")
     # getting.driver.close()
     for i in range(1, 200):
         if "photo_"+str(i) in jsdata:
@@ -495,7 +518,7 @@ def getstatedataforsale(jsdata):
             print('Failed to delete %s. Reason: %s' % (file_path, e))
     count_image = len(img_src)
     if (count_image > 0):
-        print ("Saving Images....")
+        # print ("Saving Images....")
         img_src = list(dict.fromkeys(img_src))
         i = 0
         for item in img_src:
@@ -503,8 +526,8 @@ def getstatedataforsale(jsdata):
             with open(folder+'/'+str(i)+'.jpg', 'wb') as handle:
                 response = requests.get(item, stream=True)
 
-                if not response.ok:
-                    print(response)
+                # if not response.ok:
+                #     print(response)
 
                 for block in response.iter_content(1024):
                     if not block:
@@ -590,7 +613,7 @@ def getstatedataforrent(jsdata):
 
     # getting.driver.close()
     # make directory
-    print ("Extracting Images....")
+    # print ("Extracting Images....")
     for i in range(1, 200):
         if "photo_"+str(i) in jsdata:
             img_src.append(jsdata["photo_"+str(i)])
@@ -619,16 +642,12 @@ def getstatedataforrent(jsdata):
             print('Failed to delete %s. Reason: %s' % (file_path, e))
     count_image = len(img_src)
     if (count_image > 0):
-        print ("Saving Images....")
         img_src = list(dict.fromkeys(img_src))
         i = 0
         for item in img_src:
             i = i + 1
             with open(folder+'/'+str(i)+'.jpg', 'wb') as handle:
                 response = requests.get(item, stream=True)
-
-                if not response.ok:
-                    print(response)
 
                 for block in response.iter_content(1024):
                     if not block:
@@ -643,7 +662,7 @@ def craiglister(jsdata):
         application_path = os.path.dirname(sys.executable)
     elif __file__:
         application_path = os.path.dirname(os.path.realpath(__file__))
-        print("path: "+application_path)
+        # print("path: "+application_path)
 
     # os.path.basename(__file__)
     # print(file_path, file_dir)
@@ -653,9 +672,9 @@ def craiglister(jsdata):
 
     chromedriver = os.path.join(application_path, "chromedriver")
     os.environ["webdriver.chrome.driver"] = chromedriver
-
-    gmailUser = "311marketing311@gmail.com"
-    gmailPass = "zxcvzxcv"
+    setting_data = []
+    with open('setting.json') as json_file:
+        setting_data = json.load(json_file)
 
     # Get all the date folders of listed items
     listedItemsFolders = [folder for folder in os.listdir(listedFolderDirectory) if folder[0] != "."]
@@ -679,15 +698,20 @@ def craiglister(jsdata):
     listingFolders = [listing for listing in os.listdir(listingsFolderDirectory) if listing[0] != "." and listing != "listed"]
     listingFolder = listingFolders[0]
     listing = listingInfoParse()
-
+    listing.email = setting_data["email"]
+    listing.password = setting_data["password"]
+    listing.fetchurl = setting_data["fetch_url"]
+    listing.updateurl = setting_data["update_url"]
+    listing.interval = setting_data["interval"]
     listing.loc = "ame"
+    listing.recno = jsdata["recno"]
     listing.title = jsdata["title"]
     listing.type = "housing offered"
     if(jsdata["posting_type"] == "For Sale"):
         listing.category = "real estate - by broker"
     else:
         listing.category = "apartments / housing for rent"
-    listing.email = gmailUser
+    # listing.email = gmailUser
     listing.street = ""
     listing.city = jsdata["city_or_neighborhood"]
     listing.xstreet = ""
@@ -697,7 +721,7 @@ def craiglister(jsdata):
     listing.body = listing.body.replace("<br>", "\n")
     listing.body = listing.body.replace("<p>", "\n")
     listing.body = listing.body.replace("</p>", "\n")
-    print(listing.body)
+    # print(jsdata["bedrooms"])
     # # just get rid of everything that not unicode
     # listing.body = ''.join([i if ord(i) < 128 else '' for i in listing.body])
     # # tabs will actually go to the next field in craiglist
@@ -726,21 +750,29 @@ def craiglister(jsdata):
     # listing.driver.get("https://craigslist.org?lang=en")
     # driver.quit() 
 
-
-    listing.driver = webdriver.Chrome(chromedriver)
+    options = webdriver.ChromeOptions()
+    # options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    listing.driver = webdriver.Chrome(chromedriver, options=options)
     # chrome_options = webdriver.ChromeOptions()
     # chrome_options.add_argument('--headless')
     # chrome_options.add_argument('--no-sandbox')
     # chrome_options.add_argument('--disable-dev-shm-usage')
     # listing.driver = webdriver.Chrome('chromedriver',chrome_options=chrome_options)
-    listing.driver.get("https://craigslist.org?lang=en")
+    try:
+        listing.driver.get("https://craigslist.org?lang=en")
+    except WebDriverException:
+        print("failed: "+listing.recno)
+        return
+    
 
     postListing(listing)
-    # acceptEmailTerms(listing)
+    acceptEmailTerms(listing)
+    response = requests.request("GET", listing.updateurl+listing.recno)
+    # print(response)
     # moveFolder(listingFolder,listedFolderDirectory)
     listing.driver.close()
-    time.sleep(5)
-    print ("Waiting 5 sec")
+    time.sleep(listing.interval)
+    # print ("Waiting")
 
 
 def postData(jsdata):
@@ -750,14 +782,16 @@ def postData(jsdata):
         content = getstatedataforrent(jsdata)
     craiglister(jsdata)
 
-response = requests.request("GET", "https://dixhomes.com/mlsdata/auto_posting_json.php")
-data = response.json()
-index = 0
-for dt in data:
-    index = index + 1
-    postData(dt)
-    if(index%5 == 0):
-        print("waiting for 5 minutes")
-        time.sleep(300)
-    
-print(len(data))
+while True:
+    setting_data = []
+    with open('setting.json') as json_file:
+        setting_data = json.load(json_file)
+    response = requests.request("GET", setting_data["fetch_url"])
+    data = response.json()
+    index = 0
+    for dt in data:
+        index = index + 1
+        postData(dt)
+        if(index%25 == 0):
+            # print("waiting for 5 minutes")
+            time.sleep(300)
