@@ -104,6 +104,10 @@ def clickListingCategory(listing):
         listing.driver.find_element_by_css_selector("button.pickbutton").click()
     except:
         pass
+    try:
+        listing.driver.find_element_by_xpath("//span[text()[contains(.,'"+listing.category+"')]]").click()
+    except:
+        pass
     
 
 def uploadImagePath(listing,image):
