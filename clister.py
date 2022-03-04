@@ -213,15 +213,6 @@ def fillOutListing(listing, flag):
     time.sleep(1)
 def fillOutGeolocation(listing):
     # time.sleep(3)
-    # listing.driver.find_element_by_id("xstreet0").send_keys(listing.street)
-    # listing.driver.find_element_by_id("xstreet1").send_keys(listing.xstreet)
-    # listing.driver.find_element_by_id("city").send_keys(listing.city)
-    # listing.driver.find_element_by_id("region").send_keys(listing.state)
-    # time.sleep(1)
-    # listing.driver.find_element_by_id("search_button").click()
-    # time.sleep(2)
-    #listing.driver.find_element_by_id("postal_code").send_keys(postal) #Should already be there
-    # listing.driver.find_element_by_xpath("//*[@id='leafletForm']/button[1]").click()
     listing.driver.find_element_by_css_selector("button.bigbutton").click()
     # time.sleep(10)
     time.sleep(1)
@@ -238,11 +229,6 @@ def fillOutGeolocation(listing):
         return "recursive"
     except:
         pass
-    
-    # try:
-    #     listing.driver.find_element_by_css_selector("ul.selection-list li").click()
-    # except:
-    #     pass
     time.sleep(1)
     return "success"
 def removeImgExifData(path):
@@ -323,7 +309,7 @@ def acceptEmailTerms(listing):
 
     nextButton = listing.driver.find_elements_by_xpath('//*[@id ="identifierNext"]')
     nextButton[0].click()
-
+    time.sleep(2)
     passWordBox = listing.driver.find_element_by_xpath(
         '//*[@id ="password"]/div[1]/div / div[1]/input')
     passWordBox.send_keys(passWord)
@@ -333,7 +319,7 @@ def acceptEmailTerms(listing):
 
     # print('Login Successful...!!')
     # listing.driver.find_element_by_tag_name('body').send_keys(Keys.COMMAND + 'w') 
-
+    time.sleep(3)
 
     mail = imaplib.IMAP4_SSL('imap.gmail.com')
     mail.login(gmailId, passWord)
@@ -354,29 +340,9 @@ def acceptEmailTerms(listing):
     raw_email = str(raw_email)
     acctermurl = raw_email.split("https://")[1].split(r'\r\n')[0]
     listing.driver.get(r'https://'+ acctermurl)
-    time.sleep(10)
-    # except:
-    #     print('Login Failed')
-    # import re
-    # print(re.search("(?P<url>https?://[^\s]+)", raw_email).group("url"))
-    # gmail = Gmail()
-    # gmailUser = "311marketing311@gmail.com"
-    # gmailPass = "Enjoi454"
-    # gmail.login(gmailUser,gmailPass)
-
-    # today = date.today()
-    # year = today.year
-    # month = today.month
-    # day = today.day
-
-    # time.sleep(120)
-    # print ("Checking email")
-    # emails = gmail.inbox().mail(sender="robot@craigslist.org",unread=True,after=datetime.date(year, month, day-1))
-    # termsUrl = getFirstCraigslistEmailUrl(listing,emails)
-    # acceptTermsAndConditions(listing,termsUrl)
-
-    # gmail.logout()
-    # print ("Done Checking Email")
+    time.sleep(2)
+    listing.driver.find_element_by_xpath("//a[text()[contains(.,'log out')]]").click()
+    time.sleep(5)
 
 
 # --------------------------- Craigslist Posting Actions ---------------
@@ -437,62 +403,14 @@ def getstatedataforsale(jsdata):
     elif __file__:
         application_path = os.path.dirname(__file__)
 
-    # os.path.basename(__file__)
-    # print(file_path, file_dir)
     listingsFolderDirectory = os.path.join(application_path, "listings")
     listedFolderDirectory = os.path.join(listingsFolderDirectory,"listed")
 
     chromedriver = os.path.join(application_path, "chromedriver")
     os.environ["webdriver.chrome.driver"] = chromedriver
 
-    #--------------------------------------- Listing Data ----------------------
-    # getting = gettingInfoParse()
-
-    # option = webdriver.ChromeOptions()
-    # #Removes navigator.webdriver flag
-    # # For older ChromeDriver under version 79.0.3945.16
-    # option.add_experimental_option("excludeSwitches", ["enable-automation"])
-    # option.add_experimental_option('useAutomationExtension', False)
-
-    # #For ChromeDriver version 79.0.3945.16 or over
-    # option.add_argument('--disable-blink-features=AutomationControlled')
-
-    # # listing.images = getOrderedListingImages(listingFolder)
-    # getting.driver = webdriver.Chrome(chromedriver, options=option)
-    # getting.driver.get("https://realtor.com")
-
-    # time.sleep(3)
-    # getting.driver.find_element(By.ID, "searchbox-input").send_keys(jsdata."addre[s"])
-    # time.sleep(2)
-    # getting.driver.find_element(By.ID, "searchbox-input").send_keys(Keys.RETURN)
-
-    # time.sleep(3)
-    # image_tags = getting.driver.find_elements(By.CSS_SELECTOR, "div.slick-track div.slick-slide:not(.slick-cloned)")
-    # count_image = len(image_tags)
-
     img_src = []
-    # if (count_image > 0):
-    #     print ("Extracting Images....")
-    #     for i in range(len(image_tags) - 1):
-    #         img_src.append(getting.driver.find_element(By.CSS_SELECTOR, "div.slick-slide.slick-active img").get_attribute('src'))
-    #         time.sleep(1)
-    #         next_button = getting.driver.find_elements(By.CLASS_NAME, "slick-next")
-    #         for e in next_button:
-    #             e.click()
-    #     img_src.append(getting.driver.find_element(By.CSS_SELECTOR, "div.slick-slide.slick-active img").get_attribute('src'))
-
-
-    # time.sleep(3)
-    # price = getting.driver.find_element(By.CLASS_NAME, "rui__sc-62xokl-0").get_attribute('innerHTML')
-    # print("price: "+price)
-    # beds = getting.driver.find_element(By.CSS_SELECTOR, "li.rui__sc-1thjdnb-0 span").get_attribute('innerHTML')
-    # print("beds: "+beds)
-    # bath = getting.driver.find_element(By.CSS_SELECTOR, "li.rui__jalfv4-0 span").get_attribute('innerHTML')
-    # print("bath: "+bath)
-    # sqt = getting.driver.find_element(By.CSS_SELECTOR, "li.rui__sc-147u46e-0 span span").get_attribute('innerHTML')
-    # print("sqft: "+sqt)
-    # print ("Extracting Images....")
-    # getting.driver.close()
+    
     for i in range(1, 200):
         if "photo_"+str(i) in jsdata:
             img_src.append(jsdata["photo_"+str(i)])
@@ -547,77 +465,14 @@ def getstatedataforrent(jsdata):
     elif __file__:
         application_path = os.path.dirname(__file__)
 
-    # os.path.basename(__file__)
-    # print(file_path, file_dir)
     listingsFolderDirectory = os.path.join(application_path, "listings")
     listedFolderDirectory = os.path.join(listingsFolderDirectory,"listed")
 
     chromedriver = os.path.join(application_path, "chromedriver")
     os.environ["webdriver.chrome.driver"] = chromedriver
 
-    #--------------------------------------- Listing Data ----------------------
-    # getting = gettingInfoParse()
-
-    # option = webdriver.ChromeOptions()
-    # #Removes navigator.webdriver flag
-    # # For older ChromeDriver under version 79.0.3945.16
-    # option.add_experimental_option("excludeSwitches", ["enable-automation"])
-    # option.add_experimental_option('useAutomationExtension', False)
-
-    # #For ChromeDriver version 79.0.3945.16 or over
-    # option.add_argument('--disable-blink-features=AutomationControlled')
-
-    # # listing.images = getOrderedListingImages(listingFolder)
-    # getting.driver = webdriver.Chrome(chromedriver, options=option)
-    # getting.driver.get("https://realtor.com")
-    # try:
-    #     time.sleep(2)
-    #     element = getting.driver.find_element(By.XPATH,"//p[text()='Press & Hold']")
-    #     action = ActionChains(getting.driver)
-    #     click = ActionChains(getting.driver)
-    #     action.click_and_hold(element)
-    #     action.perform()
-    #     time.sleep(10)
-    #     action.release(element)
-    #     action.perform()
-    #     time.sleep(0.2)
-    #     action.release(element)
-    # except:
-    #     pass
-
-    # time.sleep(3)
-    # getting.driver.find_element(By.ID, "searchbox-input").send_keys(jsdata."addre[s"])
-    # time.sleep(2)
-    # getting.driver.find_element(By.ID, "searchbox-input").send_keys(Keys.RETURN)
-
-    # time.sleep(5)
-    # image_tags = getting.driver.find_elements(By.CSS_SELECTOR, "div.slick-track div.slick-slide:not(.slick-cloned)")
-    # count_image = len(image_tags)
-    # print(count_image)
     img_src = []
-    # if (count_image > 0):
-    #     print ("Extracting Images....")
-    #     for i in range(len(image_tags) - 1):
-    #         img_src.append(getting.driver.find_element(By.CSS_SELECTOR, "div.slick-slide.slick-active img").get_attribute('src'))
-    #         time.sleep(1)
-    #         next_button = getting.driver.find_element(By.CLASS_NAME, "slick-next").click()
-    #     img_src.append(getting.driver.find_element(By.CSS_SELECTOR, "div.slick-slide.slick-active img").get_attribute('src'))
-
-    # time.sleep(3)
-    # price = getting.driver.find_element(By.CLASS_NAME, "rui__sc-62xokl-0").get_attribute('innerHTML')
-    # print("price: "+price.split('<span')[0])
-    # beds = getting.driver.find_element(By.CSS_SELECTOR, "li.rui__sc-1thjdnb-0 span").get_attribute('innerHTML')
-    # print("beds: "+beds)
-    # bath = getting.driver.find_element(By.CSS_SELECTOR, "li.rui__jalfv4-0 span").get_attribute('innerHTML')
-    # print("bath: "+bath)
-    # sqt = getting.driver.find_element(By.CSS_SELECTOR, "li.rui__sc-147u46e-0 span span").get_attribute('innerHTML')
-    # print("sqft: "+sqt)
-    # content = getting.driver.find_element(By.CSS_SELECTOR, "div.content-text").get_attribute('innerHTML')
-    # print("content: "+content)
-
-    # getting.driver.close()
-    # make directory
-    # print ("Extracting Images....")
+    
     for i in range(1, 200):
         if "photo_"+str(i) in jsdata:
             img_src.append(jsdata["photo_"+str(i)])
@@ -629,11 +484,8 @@ def getstatedataforrent(jsdata):
     isExist = os.path.exists(path)
 
     if not isExist:
-    
-        # Create a new directory because it does not exist 
         os.makedirs(path)
 
-    # -- empty directory
     folder = 'images/'+jsdata["recno"]
     for filename in os.listdir(folder):
         file_path = os.path.join(folder, filename)
@@ -725,11 +577,7 @@ def craiglister(jsdata):
     listing.body = listing.body.replace("<br>", "\n")
     listing.body = listing.body.replace("<p>", "\n")
     listing.body = listing.body.replace("</p>", "\n")
-    # print(jsdata["bedrooms"])
-    # # just get rid of everything that not unicode
-    # listing.body = ''.join([i if ord(i) < 128 else '' for i in listing.body])
-    # # tabs will actually go to the next field in craiglist
-    # listing.body = " ".join(listing.body.split("\t"))
+    
     listing.price = jsdata["price"]
     listing.housing_type = jsdata["housing_type"]
     listing.furnished = jsdata["furnished"]
@@ -737,31 +585,12 @@ def craiglister(jsdata):
     listing.bathrooms = jsdata["bathrooms"]
     listing.sqft = jsdata["sqft"]
     listing.telephone = jsdata["telephone"]
-    # listing.price = jsdata["price"]
 
     listing.images = getOrderedListingImages("images/"+jsdata["recno"])
 
 
-
-    # options = webdriver.ChromeOptions()
-    # options.add_argument("--headless")
-    # options.add_argument("--disable-gpu")
-
-    # capabilities = options.to_capabilities()
-
-    # listing.driver = webdriver.Remote(command_executor='http://127.0.0.1:4444/wd/hub', desired_capabilities=capabilities)
-    # listing.driver.file_detector = LocalFileDetector()
-    # listing.driver.get("https://craigslist.org?lang=en")
-    # driver.quit() 
-
     options = webdriver.ChromeOptions()
-    # options.add_experimental_option('excludeSwitches', ['enable-logging'])
     listing.driver = webdriver.Chrome(chromedriver, options=options)
-    # chrome_options = webdriver.ChromeOptions()
-    # chrome_options.add_argument('--headless')
-    # chrome_options.add_argument('--no-sandbox')
-    # chrome_options.add_argument('--disable-dev-shm-usage')
-    # listing.driver = webdriver.Chrome('chromedriver',chrome_options=chrome_options)
     try:
         listing.driver.get("https://craigslist.org?lang=en")
     except WebDriverException:
@@ -772,7 +601,7 @@ def craiglister(jsdata):
     postListing(listing)
     acceptEmailTerms(listing)
     response = requests.request("GET", listing.updateurl+listing.recno)
-    # print(response)
+    print(response.json())
     # moveFolder(listingFolder,listedFolderDirectory)
     listing.driver.close()
     time.sleep(listing.interval)
