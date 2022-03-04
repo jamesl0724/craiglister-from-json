@@ -327,7 +327,7 @@ def acceptEmailTerms(listing):
     # Out: list of "folders" aka labels in gmail.
     mail.select("inbox") # connect to inbox.
     
-    result, data = mail.search(None, "ALL")
+    result, data = mail.search(None, "FROM 'robot@craigslist.org'")
     
     ids = data[0] # data is a list.
     id_list = ids.split() # ids is a space separated string
